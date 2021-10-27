@@ -1,0 +1,12 @@
+LICENSE
+MANIFEST.in
+README.md
+pyproject.toml
+setup.cfg
+src/auracanaxai/__init__.py
+src/auracanaxai/helloworld.py
+src/auracanaxai.egg-info/PKG-INFO
+src/auracanaxai.egg-info/SOURCES.txt
+src/auracanaxai.egg-info/dependency_links.txt
+src/auracanaxai.egg-info/not-zip-safe
+src/auracanaxai.egg-info/top_level.txt

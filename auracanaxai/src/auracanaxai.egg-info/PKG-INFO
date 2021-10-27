@@ -1,0 +1,22 @@
+Metadata-Version: 2.1
+Name: auracanaxai
+Version: 0.0.1
+Summary: A novel approach for generating explanations of the predictions of a generic ML model
+Home-page: https://github.com/detsutut/AraucanaXAI
+Author: Tommaso Buonocore
+Author-email: buonocore.tms@gmail.com
+License: UNKNOWN
+Project-URL: Bug Tracker, https://github.com/detsutut/AraucanaXAI/issues
+Keywords: xai,ai
+Platform: UNKNOWN
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Requires-Python: >=3.6
+Description-Content-Type: text/markdown
+License-File: LICENSE
+
+# Auracana XAI
+
+Lorem Ipsum Dolor Sit Amet
+
