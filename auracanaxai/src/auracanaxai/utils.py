@@ -89,8 +89,9 @@ def run(x_target, y_pred_target, data_train, feature_names, cat_list, predict_fu
     :param seed: specify random state
 
     :returns:
-        - x - first output
-        - y - second output
+        - tree: classification tree
+        - data: resampled data
+        - acc: accuracy on resampled data
     """
     local_train = __find_neighbours(target=x_target,
                                     data=data_train,
