@@ -13,10 +13,10 @@
     <img src="web/img/logo.png" alt="Logo" height="80"> Araucana XAI
   </h2>
 
-  <h3 align="center">Lorem Ipsum Dolor Sit Amet</h3>
+  <h3 align="center">Tree-based local explanations of machine learning model predictions</h3>
 
   <p align="center">
-    Lorem Ipsum Dolor Sit Amet.<br/><a href="https://github.com/detsutut/AraucanaXAI/network/members">Fork this project</a> Lorem Ipsum Dolor Sit Amet.
+    Repository for the <a href="https://test.pypi.org/project/araucanaxai/">araucanaxai</a> package. Implementation of the pipeline described in <a href="https://arxiv.org/abs/2110.08272">Parimbelli et al., 2021</a>.
     <br />
     <a href="https://github.com/detsutut/AraucanaXAI"><strong>Explore the docs »</strong></a>
     <br />
@@ -33,19 +33,8 @@
 <details>
   <summary>Table of Contents</summary>
   <ol>
-    <li>
-      <a href="#about-the-project">About The Project</a>
-      <ul>
-        <li><a href="#built-with">Built With</a></li>
-      </ul>
-    </li>
-    <li>
-      <a href="#getting-started">Getting Started</a>
-      <ul>
-        <li><a href="#prerequisites">Prerequisites</a></li>
-        <li><a href="#installation">Installation</a></li>
-      </ul>
-    </li>
+    <li><a href="#about-the-project">About The Project</a></li>
+    <li><a href="#installation">Installation</a></li>
     <li><a href="#usage">Usage</a></li>
     <li><a href="#roadmap">Roadmap</a></li>
     <li><a href="#license">License</a></li>
@@ -59,61 +48,74 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+Increasingly complex learning methods such as boosting, bagging and deep learning have made ML models more accurate, but harder to understand and interpret. A tradeoff between performance and intelligibility is often to be faced, especially in high-stakes applications like medicine. This project propose a novel methodological approach for generating explanations of the predictions of a generic ML model, given a specific instance for which the prediction has been made, that can tackle both classification and regression tasks. Advantages of the proposed XAI approach include improved fidelity to the original model, the ability to deal with non-linear decision boundaries, and native support to both classification and regression problems.
 
-<img src="img/example.png" style="border-radius: 5px" alt="Example">
+### Paper
+The araucanaxai package implements the pipeline described in <a href="https://arxiv.org/abs/2110.08272">*Tree-based local explanations of machine learning model predictions - Parimbelli et al., 2021*</a>.
 
+XAI-Healthcare International Workshop presentation:<br/>
+[![XAI-Healthcare International Workshop](https://img.youtube.com/vi/N22QYvTZFBk/0.jpg)](https://www.youtube.com/watch?v=N22QYvTZFBk)
 
-<p align="right">(<a href="#top">back to top</a>)</p>
-
-
-
-### Built With
-
-Lorem Ipsum Dolor Sit Amet
-
-* [Lorem Ipsum](https://loremipsum.io) Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+**Keywords**: *explainable AI, explanations, local explanation, fidelity, interpretability, transparency, trustworthy AI, black-box, machine learning, feature importance, decision tree, CART, AIM*.
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
+<!-- INSTALLATION -->
+## Installation
 
-<!-- GETTING STARTED -->
-## Getting Started
-
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-
-### Prerequisites
-
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-* Lorem ipsum dolor sit amet
-  ```sh
-  Lorem ipsum dolor sit amet
-  ```
-* Lorem ipsum dolor sit amet
-  ```sh
-  Lorem ipsum dolor sit amet
-  ```
-  
-### Installation
-
-1. Lorem ipsum dolor sit amet
-2. Lorem ipsum dolor sit amet
-3. Lorem ipsum dolor sit amet
-    ```sh
-    Lorem ipsum dolor sit amet
+1. Make sure you have the latest version of pip installed
+   ```sh
+   pip install --upgrade pip
     ```
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+2. Install araucanaxai through pip
+    ```sh
+    pip install -i https://test.pypi.org/simple/ araucanaxai
+    ```
 
 <p align="right">(<a href="#top">back to top</a>)</p>
-
-
 
 <!-- USAGE EXAMPLES -->
 ## Usage
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+```sh
+from pandas import DataFrame, Series
+import numpy as np
+import araucanaxai
+
+X_train_normalized: DataFrame = DataFrame({'cont': np.random.random(500),
+                                           'CAT1': np.random.randint(0, 2, 500),
+                                           'CAT2': np.random.randint(0, 2, 500)})  # normalized training set
+X_feat_list: list = ['cont', 'CAT1', 'CAT2']  # list of features (names)
+X_test_normalized: DataFrame = DataFrame({'cont': np.random.random(100),
+                                          'CAT1': np.random.randint(0, 2, 100),
+                                          'CAT2': np.random.randint(0, 2, 100)})  # normalized test set
+y_train: Series = Series(np.random.randint(0, 2, 500))  # true class training set
+y_test: Series = Series(np.random.randint(0, 2, 100))  # true class test set
+y_test_gb: Series = Series(np.random.randint(0, 2, 100))  # predicted class test set
+
+X_test_normalized = X_test_normalized.to_numpy()
+X_train_normalized = X_train_normalized.to_numpy()
+
+
+def clf_predict(data, threshold=0.5):
+    raw_prob = np.array([np.random.uniform(0, 1) for i in range(0, data.shape[0])])
+    return (raw_prob >= threshold).astype(int)
+
+
+cat = ['CAT1', 'CAT2']
+is_cat = [x in cat for x in X_feat_list]
+print('True class:', y_test.iloc[0], '. Predicted class:', y_test_gb[0])
+
+instance = X_test_normalized[0, :].reshape(1, X_test_normalized.shape[1])
+instance_pred_y = y_test_gb[0]
+
+tree = araucanaxai.run(x_target=instance, y_pred_target=instance_pred_y,
+                       data_train=X_train_normalized, feature_names=X_feat_list, cat_list=is_cat,
+                       predict_fun=clf_predict, y_label=['no death', 'death'])
+
+```
+
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
@@ -145,6 +147,7 @@ Distributed under MIT License. See `LICENSE` for more information.
 Tommaso Mario Buonocore <br> [![LinkedIn][linkedin-shield]][linkedin-url]  [![Gmail][gmail-shield]][gmail-url]
 
 Project Link: [https://github.com/detsutut/AraucanaXAI](https://github.com/detsutut/AraucanaXAI)
+Package Link: [https://test.pypi.org/project/araucanaxai/](https://test.pypi.org/project/araucanaxai/)
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
@@ -153,11 +156,7 @@ Project Link: [https://github.com/detsutut/AraucanaXAI](https://github.com/detsu
 <!-- ACKNOWLEDGMENTS -->
 ## Acknowledgments
 
-Gratitude for support, assistance and inspiration goes to:
-
-* Lorem ipsum dolor sit amet
-* Lorem ipsum dolor sit amet
-
+Authors: E. Parimbelli, G. Nicora, S. Wilk, W. Michalowski, R. Bellazzi
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
