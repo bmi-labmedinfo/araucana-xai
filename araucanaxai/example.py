@@ -1,6 +1,6 @@
 from pandas import DataFrame, Series
 import numpy as np
-import auracanaxai
+import araucanaxai
 
 X_train_normalized: DataFrame = DataFrame({'cont': np.random.random(500),
                                            'CAT1': np.random.randint(0, 2, 500),

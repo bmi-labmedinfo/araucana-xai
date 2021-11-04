@@ -1,0 +1,14 @@
+LICENSE
+MANIFEST.in
+README.md
+pyproject.toml
+setup.cfg
+src/araucanaxai/__init__.py
+src/araucanaxai/constants.py
+src/araucanaxai/init.py
+src/araucanaxai/utils.py
+src/araucanaxai.egg-info/PKG-INFO
+src/araucanaxai.egg-info/SOURCES.txt
+src/araucanaxai.egg-info/dependency_links.txt
+src/araucanaxai.egg-info/not-zip-safe
+src/araucanaxai.egg-info/top_level.txt
