@@ -10,7 +10,7 @@
 <br />
 <div align="center">
   <h2>
-    <img src="web/img/logo.png" alt="Logo" height="80"> Araucana XAI
+    Araucana XAI
   </h2>
 
   <h3 align="center">Tree-based local explanations of machine learning model predictions</h3>
