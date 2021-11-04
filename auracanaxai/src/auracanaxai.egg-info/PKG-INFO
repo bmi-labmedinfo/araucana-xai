@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: auracanaxai
-Version: 0.0.1
+Version: 0.0.2
 Summary: A novel approach for generating explanations of the predictions of a generic ML model
 Home-page: https://github.com/detsutut/AraucanaXAI
 Author: Tommaso Buonocore

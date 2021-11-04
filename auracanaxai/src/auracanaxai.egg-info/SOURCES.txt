@@ -6,8 +6,7 @@ setup.cfg
 src/auracanaxai/__init__.py
 src/auracanaxai/constants.py
 src/auracanaxai/init.py
-src/auracanaxai/main.py
-src/auracanaxai/utilities.py
+src/auracanaxai/utils.py
 src/auracanaxai.egg-info/PKG-INFO
 src/auracanaxai.egg-info/SOURCES.txt
 src/auracanaxai.egg-info/dependency_links.txt
