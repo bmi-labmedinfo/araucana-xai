@@ -1,10 +1,40 @@
 from . import constants
 from pandas import DataFrame
 import numpy as np
-import matplotlib.pyplot as plt
 from sklearn import tree
+from sklearn import datasets
 from gower import gower_matrix
 from imblearn.over_sampling import SMOTENC
+
+
+def load_breast_cancer(train_split=constants.SPLIT):
+    """
+    Load toy dataset crafted from the breast cancer wisconsin dataset.
+
+    :returns:
+        - X_train: training set
+        - y_train: training target class
+        - X_test: test set
+        - y_test: test target class
+        - feature_names: feature names
+        - target_names: class names
+    """
+    cancer = datasets.load_breast_cancer()
+    cancer.data = cancer.data[:, 0:6]
+    cancer.feature_names = cancer.feature_names[0:6]
+    for i in range(0, 3):
+        cancer.data[:, i] = cancer.data[:, i] > np.mean(cancer.data[:, i])
+        cancer.data[:, i] = cancer.data[:, i].astype(np.int32)
+    cancer.feature_names[0:3] = ['radius', 'texture', 'perimeter']
+    ind = round(len(cancer.data) * train_split)
+    return {
+        "X_train": cancer.data[0:ind],
+        "y_train": cancer.target[0:ind],
+        "X_test": cancer.data[ind:len(cancer.data)],
+        "y_test": cancer.target[ind:len(cancer.data)],
+        "feature_names": cancer.feature_names,
+        "target_names": cancer.target_names
+    }
 
 
 def __find_neighbours(target: np.ndarray, data: np.ndarray, cat_list: list, n: int = constants.NEIGHBOURHOOD_SIZE):
@@ -63,20 +93,7 @@ def __create_tree(X, y, X_features, seed=constants.SEED):
     return clf_tree_0
 
 
-def __plot_tree(classif_tree, feature_names, class_names):
-    """
-    Plot a classification tree.
-
-    :param classif_tree: classification tree
-    :param feature_names: feature names
-    :param class_names: class names
-    """
-    fig, ax = plt.subplots(figsize=(10, 10))
-    tree.plot_tree(classif_tree, feature_names=feature_names, filled=True, class_names=class_names)
-    plt.show()
-
-
-def run(x_target, y_pred_target, data_train, feature_names, cat_list, predict_fun, y_label=['negative', 'positive'], seed=constants.SEED):
+def run(x_target, y_pred_target, data_train, feature_names, cat_list, predict_fun, seed=constants.SEED):
     """
     Run the AraucanaXAI algorithm and plot the calssification tree.
 
@@ -104,7 +121,6 @@ def run(x_target, y_pred_target, data_train, feature_names, cat_list, predict_fu
                                 cat_list=cat_list,
                                 seed=seed)
     xai_c = __create_tree(X_res, y_res, feature_names, seed=seed)
-    __plot_tree(xai_c, feature_names, y_label)
     return {'tree': xai_c,
             'data': [X_res, y_res],
             'acc': xai_c.score(X_res, y_res)}

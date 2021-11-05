@@ -1,34 +1,32 @@
-from pandas import DataFrame, Series
-import numpy as np
 import araucanaxai
+from sklearn.linear_model import LogisticRegression
+from sklearn import tree
+import matplotlib.pyplot as plt
 
-X_train_normalized: DataFrame = DataFrame({'cont': np.random.random(500),
-                                           'CAT1': np.random.randint(0, 2, 500),
-                                           'CAT2': np.random.randint(0, 2, 500)})  # normalized training set
-X_feat_list: list = ['cont', 'CAT1', 'CAT2']  # list of features (names)
-X_test_normalized: DataFrame = DataFrame({'cont': np.random.random(100),
-                                          'CAT1': np.random.randint(0, 2, 100),
-                                          'CAT2': np.random.randint(0, 2, 100)})  # normalized test set
-y_train: Series = Series(np.random.randint(0, 2, 500))  # true class training set
-y_test: Series = Series(np.random.randint(0, 2, 100))  # true class test set
-y_test_gb: Series = Series(np.random.randint(0, 2, 100))  # predicted class test set
+#load toy dataset
+data = araucanaxai.load_breast_cancer()
 
-X_test_normalized = X_test_normalized.to_numpy()
-X_train_normalized = X_train_normalized.to_numpy()
+#specify which features are categorical
+cat = data["feature_names"][0:3]
+is_cat = [x in cat for x in data["feature_names"]]
 
+#train classifier
+classifier = LogisticRegression(random_state=42, solver='liblinear', penalty='l1')
+classifier.fit(data["X_train"], data["y_train"])
+y_test_pred = classifier.predict(data["X_test"])
 
-def clf_predict(data, threshold=0.5):
-    raw_prob = np.array([np.random.uniform(0, 1) for i in range(0, data.shape[0])])
-    return (raw_prob >= threshold).astype(int)
+#declare the instance we want to explain
+instance = data["X_test"][0, :].reshape(1, data["X_test"].shape[1])
+instance_pred_y = y_test_pred[0]
 
+#build xai tree to explain the instance classification
+xai_tree = araucanaxai.run(x_target=instance, y_pred_target=instance_pred_y,
+                       data_train=data["X_train"], feature_names=data["feature_names"], cat_list=is_cat,
+                       predict_fun=classifier.predict)
 
-cat = ['CAT1', 'CAT2']
-is_cat = [x in cat for x in X_feat_list]
-print('True class:', y_test.iloc[0], '. Predicted class:', y_test_gb[0])
-
-instance = X_test_normalized[0, :].reshape(1, X_test_normalized.shape[1])
-instance_pred_y = y_test_gb[0]
-
-tree = auracanaxai.run(x_target=instance, y_pred_target=instance_pred_y,
-                       data_train=X_train_normalized, feature_names=X_feat_list, cat_list=is_cat,
-                       predict_fun=clf_predict, y_label=['no death', 'death'])
+#plot the tree
+fig, ax = plt.subplots(figsize=(10, 10))
+tree.plot_tree(xai_tree['tree'], feature_names=data["feature_names"], filled=True, class_names=data["target_names"])
+plt.show()
+# or just save it
+# plt.savefig('tree.svg', format='svg', bbox_inches="tight")
