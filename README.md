@@ -76,6 +76,13 @@ XAI-Healthcare International Workshop presentation:<br/>
 <!-- USAGE EXAMPLES -->
 ## Usage
 
+Here's a basic example with a built-in toy dataset that illustrates Araucana XAI common usage. 
+
+First, train a classifier on the data. Araucana XAI is model-agnostic, you only have to provide a function that takes data as input and outputs binary labels.
+
+Then, declare the example whose classification you want to explain.
+
+Finally, run the Araucana XAI and plot the xai tree to explain model's decision as a set of IF-ELSE rules.
 
 ```python
 import araucanaxai
@@ -123,7 +130,8 @@ plt.show()
 ## Roadmap
 
 - [x] Basic implementation
-- [ ] Everything else
+- [ ] Parameters tuning
+- [ ] Fidelity
 
 See the [open issues](https://github.com/detsutut/AraucanaXAI/issues) for a full list of proposed features (and known issues).
 
@@ -140,13 +148,15 @@ Distributed under MIT License. See `LICENSE` for more information.
 
 
 <!-- CONTACT -->
-## Contact
+## Contact and References
 
-Tommaso Mario Buonocore <br> [![LinkedIn][linkedin-shield]][linkedin-url]  [![Gmail][gmail-shield]][gmail-url]
+*   **Repository maintainer**: Tommaso M. Buonocore  [![Gmail][gmail-shield]][gmail-url] [![LinkedIn][linkedin-shield]][linkedin-url]  
 
-Project Link: [https://github.com/detsutut/AraucanaXAI](https://github.com/detsutut/AraucanaXAI)
+*   **Paper Link**: [https://arxiv.org/abs/2110.08272](https://arxiv.org/abs/2110.08272)
 
-Package Link: [https://test.pypi.org/project/araucanaxai/](https://test.pypi.org/project/araucanaxai/)
+*   **Project Link**: [https://github.com/detsutut/AraucanaXAI](https://github.com/detsutut/AraucanaXAI)
+
+*   **Package Link**: [https://test.pypi.org/project/araucanaxai/](https://test.pypi.org/project/araucanaxai/)
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
