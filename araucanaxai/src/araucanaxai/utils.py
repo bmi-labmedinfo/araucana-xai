@@ -1,4 +1,5 @@
 from . import constants
+from warnings import warn
 from pandas import DataFrame
 import numpy as np
 from sklearn import tree
@@ -11,6 +12,8 @@ def load_breast_cancer(train_split=constants.SPLIT):
     """
     Load toy dataset crafted from the breast cancer wisconsin dataset.
 
+    :param train_split: proportion of training data
+
     :returns:
         - X_train: training set
         - y_train: training target class
@@ -20,12 +23,12 @@ def load_breast_cancer(train_split=constants.SPLIT):
         - target_names: class names
     """
     cancer = datasets.load_breast_cancer()
-    cancer.data = cancer.data[:, 0:6]
-    cancer.feature_names = cancer.feature_names[0:6]
-    for i in range(0, 3):
+    cancer.data = cancer.data[:, 0:10]
+    cancer.feature_names = cancer.feature_names[0:10]
+    for i in range(0, 5):
         cancer.data[:, i] = cancer.data[:, i] > np.mean(cancer.data[:, i])
         cancer.data[:, i] = cancer.data[:, i].astype(np.int32)
-    cancer.feature_names[0:3] = ['radius', 'texture', 'perimeter']
+    cancer.feature_names[0:5] = ['radius', 'texture', 'perimeter', 'area', 'smoothness']
     ind = round(len(cancer.data) * train_split)
     return {
         "X_train": cancer.data[0:ind],
@@ -61,7 +64,7 @@ def __find_neighbours(target: np.ndarray, data: np.ndarray, cat_list: list, n: i
 
 def __oversample(x_local, x_instance, y_local_pred, y_instance_pred, cat_list: list, seed: int = constants.SEED):
     """
-    Local data augmentation with oversampling.
+    Local data augmentation with SMOTE (Synthetic Minority Oversampling TEchnique).
 
     :param x_local: local set of examples to use for oversampling
     :param x_instance: target example
@@ -93,7 +96,7 @@ def __create_tree(X, y, X_features, seed=constants.SEED):
     return clf_tree_0
 
 
-def run(x_target, y_pred_target, data_train, feature_names, cat_list, predict_fun, seed=constants.SEED):
+def run(x_target, y_pred_target, data_train, feature_names, cat_list, predict_fun, neighbourhood_size=constants.NEIGHBOURHOOD_SIZE, seed=constants.SEED):
     """
     Run the AraucanaXAI algorithm and plot the calssification tree.
 
@@ -103,6 +106,7 @@ def run(x_target, y_pred_target, data_train, feature_names, cat_list, predict_fu
     :param feature_names: predicted class for the target instance
     :param cat_list: list of booleans to specify which variables are categorical
     :param predict_fun: function used to predict the outcomes, i.e. the model we want to explain. Function must have one input only: the data.
+    :param neighbourhood_size: specify the number of neighbours to consider
     :param seed: specify random state
 
     :returns:
@@ -112,14 +116,20 @@ def run(x_target, y_pred_target, data_train, feature_names, cat_list, predict_fu
     """
     local_train = __find_neighbours(target=x_target,
                                     data=data_train,
-                                    cat_list=cat_list)
+                                    cat_list=cat_list,
+                                    n=neighbourhood_size)
     y_local_train = predict_fun(local_train)
-    X_res, y_res = __oversample(x_local=local_train,
-                                x_instance=x_target,
-                                y_local_pred=y_local_train,
-                                y_instance_pred=y_pred_target,
-                                cat_list=cat_list,
-                                seed=seed)
+    if len(np.unique(y_local_train)) < 2:
+        warn('Cannot oversample: local y needs to have more than 1 class to perform SMOTE oversampling. Got 1 class instead.')
+        X_res = np.concatenate((local_train, x_target))
+        y_res = np.append(y_local_train, y_pred_target)
+    else:
+        X_res, y_res = __oversample(x_local=local_train,
+                                    x_instance=x_target,
+                                    y_local_pred=y_local_train,
+                                    y_instance_pred=y_pred_target,
+                                    cat_list=cat_list,
+                                    seed=seed)
     xai_c = __create_tree(X_res, y_res, feature_names, seed=seed)
     return {'tree': xai_c,
             'data': [X_res, y_res],
