@@ -145,6 +145,7 @@ Distributed under MIT License. See `LICENSE` for more information.
 Tommaso Mario Buonocore <br> [![LinkedIn][linkedin-shield]][linkedin-url]  [![Gmail][gmail-shield]][gmail-url]
 
 Project Link: [https://github.com/detsutut/AraucanaXAI](https://github.com/detsutut/AraucanaXAI)
+
 Package Link: [https://test.pypi.org/project/araucanaxai/](https://test.pypi.org/project/araucanaxai/)
 
 <p align="right">(<a href="#top">back to top</a>)</p>
