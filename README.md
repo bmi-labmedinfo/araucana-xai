@@ -130,7 +130,7 @@ plt.show()
 ## Roadmap
 
 - [x] Basic implementation
-- [ ] Parameters tuning
+- [x] Parameters tuning
 - [ ] Fidelity
 
 See the [open issues](https://github.com/detsutut/AraucanaXAI/issues) for a full list of proposed features (and known issues).
