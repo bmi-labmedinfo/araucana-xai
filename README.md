@@ -91,11 +91,11 @@ from sklearn import tree
 import matplotlib.pyplot as plt
 
 #load toy dataset
-data = araucanaxai.load_breast_cancer()
+data = araucanaxai.load_breast_cancer(train_split=.75, cat=True)
 
-#specify which features are categorical
-cat = data["feature_names"][0:3]
-is_cat = [x in cat for x in data["feature_names"]]
+#specify which features are categorical (set to None if no categorical features)
+cat = data["feature_names"][0:3]                     
+is_cat = [x in cat for x in data["feature_names"]]   
 
 #train classifier
 classifier = LogisticRegression(random_state=42, solver='liblinear', penalty='l1')
