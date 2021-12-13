@@ -8,12 +8,11 @@ from gower import gower_matrix
 from imblearn.over_sampling import SMOTENC, SMOTEN
 
 
-def load_breast_cancer(train_split=constants.SPLIT, cat=True):
+def load_breast_cancer(train_split=constants.SPLIT, cat = True):
     """
     Load toy dataset crafted from the breast cancer wisconsin dataset.
 
     :param train_split: proportion of training data
-    :param cat: boolean flag to specify if the dataset should contain also categorical features
 
     :returns:
         - X_train: training set
@@ -26,7 +25,6 @@ def load_breast_cancer(train_split=constants.SPLIT, cat=True):
     cancer = datasets.load_breast_cancer()
     cancer.data = cancer.data[:, 0:10]
     cancer.feature_names = cancer.feature_names[0:10]
-    # if cat, convert the first 5 features from continuous to discrete values
     if cat:
         for i in range(0, 5):
             cancer.data[:, i] = cancer.data[:, i] > np.mean(cancer.data[:, i])
@@ -43,7 +41,7 @@ def load_breast_cancer(train_split=constants.SPLIT, cat=True):
     }
 
 
-def __find_neighbours(target: np.ndarray, data: np.ndarray, cat_list: list = None, n: int = constants.NEIGHBOURHOOD_SIZE):
+def __find_neighbours(target: np.ndarray, data: np.ndarray, cat_list: list, n: int = constants.NEIGHBOURHOOD_SIZE):
     """
     Finds the n nearest neighbours to the target example according to the Gower distance.
 
@@ -65,7 +63,7 @@ def __find_neighbours(target: np.ndarray, data: np.ndarray, cat_list: list = Non
     return local_training_set
 
 
-def __oversample(x_local, x_instance, y_local_pred, y_instance_pred, cat_list: list = None, seed: int = constants.SEED):
+def __oversample(x_local, x_instance, y_local_pred, y_instance_pred, cat_list: list, seed: int = constants.SEED):
     """
     Local data augmentation with SMOTE (Synthetic Minority Oversampling TEchnique).
 
@@ -84,7 +82,7 @@ def __oversample(x_local, x_instance, y_local_pred, y_instance_pred, cat_list: l
     else:
         smote = SMOTENC(categorical_features=np.where(cat_list)[0].tolist(), random_state=seed, sampling_strategy='all')
     return smote.fit_resample(np.concatenate((x_local, x_instance)),
-                              np.append(y_local_pred, y_instance_pred))
+                                 np.append(y_local_pred, y_instance_pred))
 
 
 def __create_tree(X, y, X_features, seed=constants.SEED):
@@ -103,8 +101,7 @@ def __create_tree(X, y, X_features, seed=constants.SEED):
     return clf_tree_0
 
 
-def run(x_target, y_pred_target, data_train, feature_names, cat_list, predict_fun,
-        neighbourhood_size=constants.NEIGHBOURHOOD_SIZE, seed=constants.SEED):
+def run(x_target, y_pred_target, data_train, feature_names, cat_list, predict_fun, neighbourhood_size=constants.NEIGHBOURHOOD_SIZE, seed=constants.SEED):
     """
     Run the AraucanaXAI algorithm and plot the calssification tree.
 
@@ -128,8 +125,7 @@ def run(x_target, y_pred_target, data_train, feature_names, cat_list, predict_fu
                                     n=neighbourhood_size)
     y_local_train = predict_fun(local_train)
     if len(np.unique(y_local_train)) < 2:
-        warn(
-            'Cannot oversample: local y needs to have more than 1 class to perform SMOTE oversampling. Got 1 class instead.')
+        warn('Cannot oversample: local y needs to have more than 1 class to perform SMOTE oversampling. Got 1 class instead.')
         X_res = np.concatenate((local_train, x_target))
         y_res = np.append(y_local_train, y_pred_target)
     else:

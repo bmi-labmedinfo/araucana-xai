@@ -5,11 +5,13 @@ from sklearn.metrics import *
 import matplotlib.pyplot as plt
 
 #load toy dataset
-data = araucanaxai.load_breast_cancer(train_split=.75)
-
-#specify which features are categorical
-cat = data["feature_names"][0:5]
-is_cat = [x in cat for x in data["feature_names"]]
+cat_data = True
+data = araucanaxai.load_breast_cancer(train_split=.75, cat=cat_data)
+is_cat = None
+if cat_data:
+    # specify which features are categorical
+    cat = data["feature_names"][0:5]
+    is_cat = [x in cat for x in data["feature_names"]]
 
 #train classifier
 classifier = LogisticRegression(random_state=42, solver='liblinear', penalty='l1')

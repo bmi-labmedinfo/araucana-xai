@@ -11,4 +11,5 @@ src/araucanaxai.egg-info/PKG-INFO
 src/araucanaxai.egg-info/SOURCES.txt
 src/araucanaxai.egg-info/dependency_links.txt
 src/araucanaxai.egg-info/not-zip-safe
+src/araucanaxai.egg-info/requires.txt
 src/araucanaxai.egg-info/top_level.txt
