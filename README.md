@@ -68,7 +68,7 @@ XAI-Healthcare International Workshop presentation:<br/>
     ```
 2. Install araucanaxai through pip
     ```sh
-    pip install -i https://test.pypi.org/simple/ araucanaxai
+    pip install araucanaxai
     ```
 
 <p align="right">(<a href="#top">back to top</a>)</p>
