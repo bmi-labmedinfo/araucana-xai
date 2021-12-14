@@ -193,7 +193,7 @@ Authors: E. Parimbelli, G. Nicora, S. Wilk, W. Michalowski, R. Bellazzi
 [issues-shield]: https://img.shields.io/github/issues/detsutut/AraucanaXAI.svg?style=for-the-badge
 [issues-url]: https://github.com/detsutut/AraucanaXAI/issues
 [license-shield]: https://img.shields.io/github/license/detsutut/AraucanaXAI.svg?style=for-the-badge
-[license-url]: https://github.com/detsutut/AraucanaXAI/blob/master/LICENSE.txt
+[license-url]: https://github.com/detsutut/AraucanaXAI/blob/master/araucanaxai/LICENSE
 [linkedin-shield]: 	https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white
 [linkedin-url]: https://linkedin.com/in/tbuonocore
 [gmail-shield]: https://img.shields.io/badge/Gmail-D14836?style=for-the-badge&logo=gmail&logoColor=white
