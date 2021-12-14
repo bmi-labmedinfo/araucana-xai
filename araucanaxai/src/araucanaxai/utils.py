@@ -104,7 +104,7 @@ def __create_tree(X, y, X_features, seed=constants.SEED):
 
 
 def run(x_target, y_pred_target, data_train, feature_names, cat_list, predict_fun,
-        neighbourhood_size=constants.NEIGHBOURHOOD_SIZE, seed=constants.SEED):
+        neighbourhood_size=100, seed=constants.SEED):
     """
     Run the AraucanaXAI algorithm and plot the calssification tree.
 
