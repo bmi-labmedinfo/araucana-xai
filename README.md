@@ -130,7 +130,7 @@ plt.show()
 ## Roadmap
 
 - [x] Basic implementation
-- [x] Parameters tuning
+- [ ] Parameters tuning: oversampling yes/no, pruning yes/no, neighborhood size
 - [ ] Pandas DataFrame compatibility
 - [ ] Fidelity
 
