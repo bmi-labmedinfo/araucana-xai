@@ -141,7 +141,7 @@ You can also check the notebook [here](https://github.com/detsutut/AraucanaXAI/b
 ## Roadmap
 
 - [x] Basic implementation
-- [x] Parameters tuning: oversampling yes/no, pruning yes/no, neighborhood size
+- [x] Parameters tuning: oversampling yes/no, pruning, neighborhood size
 - [ ] Pandas DataFrame compatibility
 - [ ] Fidelity
 
