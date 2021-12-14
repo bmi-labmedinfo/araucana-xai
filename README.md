@@ -13,6 +13,8 @@
   </h2>
 
   <h3 align="center">Tree-based local explanations of machine learning model predictions</h3>
+  
+  [![Status][status-shield]][status-url]
 
   <p align="center">
     Repository for the <a href="https://pypi.org/project/araucanaxai/">araucanaxai</a> package. Implementation of the pipeline described in <a href="https://arxiv.org/abs/2110.08272">Parimbelli et al., 2021</a>.
@@ -186,6 +188,8 @@ Authors: E. Parimbelli, G. Nicora, S. Wilk, W. Michalowski, R. Bellazzi
 <!-- MARKDOWN LINKS -->
 [contributors-shield]: https://img.shields.io/github/contributors/detsutut/AraucanaXAI.svg?style=for-the-badge
 [contributors-url]: https://github.com/detsutut/AraucanaXAI/graphs/contributors
+[status-shield]: https://img.shields.io/badge/Status-pre--release-blue
+[status-url]: https://github.com/detsutut/AraucanaXAI/releases
 [forks-shield]: https://img.shields.io/github/forks/detsutut/AraucanaXAI.svg?style=for-the-badge
 [forks-url]: https://github.com/detsutut/AraucanaXAI/network/members
 [stars-shield]: https://img.shields.io/github/stars/detsutut/AraucanaXAI.svg?style=for-the-badge
