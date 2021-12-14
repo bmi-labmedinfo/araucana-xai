@@ -15,7 +15,7 @@
   <h3 align="center">Tree-based local explanations of machine learning model predictions</h3>
 
   <p align="center">
-    Repository for the <a href="https://test.pypi.org/project/araucanaxai/">araucanaxai</a> package. Implementation of the pipeline described in <a href="https://arxiv.org/abs/2110.08272">Parimbelli et al., 2021</a>.
+    Repository for the <a href="https://pypi.org/project/araucanaxai/">araucanaxai</a> package. Implementation of the pipeline described in <a href="https://arxiv.org/abs/2110.08272">Parimbelli et al., 2021</a>.
     <br />
     <a href="https://github.com/detsutut/AraucanaXAI"><strong>Explore the docs »</strong></a>
     <br />
@@ -167,7 +167,7 @@ Distributed under MIT License. See `LICENSE` for more information.
 
 *   **Project Link**: [https://github.com/detsutut/AraucanaXAI](https://github.com/detsutut/AraucanaXAI)
 
-*   **Package Link**: [https://test.pypi.org/project/araucanaxai/](https://test.pypi.org/project/araucanaxai/)
+*   **Package Link**: [https://pypi.org/project/araucanaxai/](https://pypi.org/project/araucanaxai/)
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
