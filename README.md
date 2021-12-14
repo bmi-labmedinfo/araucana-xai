@@ -131,7 +131,7 @@ plt.savefig('tree.svg', format='svg', bbox_inches="tight")
 
 ```
 
-You can also check the notebook [here](https://github.com/detsutut/AraucanaXAI/issues).
+You can also check the notebook [here](https://github.com/detsutut/AraucanaXAI/blob/master/example.ipynb).
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
@@ -145,7 +145,7 @@ You can also check the notebook [here](https://github.com/detsutut/AraucanaXAI/i
 - [ ] Pandas DataFrame compatibility
 - [ ] Fidelity
 
-See the [open issues](https://github.com/detsutut/AraucanaXAI/blob/master/example.ipynb) for a full list of proposed features (and known issues).
+See the [open issues](https://github.com/detsutut/AraucanaXAI/issues) for a full list of proposed features (and known issues).
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
