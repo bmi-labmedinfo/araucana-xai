@@ -76,7 +76,7 @@ XAI-Healthcare International Workshop presentation:<br/>
 <!-- USAGE EXAMPLES -->
 ## Usage
 
-Here's a basic example with a built-in toy dataset that illustrates Araucana XAI common usage. 
+Here's a basic example with a built-in toy dataset that illustrates Araucana XAI common usage.
 
 First, train a classifier on the data. Araucana XAI is model-agnostic, you only have to provide a function that takes data as input and outputs binary labels.
 
@@ -131,6 +131,7 @@ plt.savefig('tree.svg', format='svg', bbox_inches="tight")
 
 ```
 
+You can also check the notebook [here](https://github.com/detsutut/AraucanaXAI/issues).
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
@@ -144,7 +145,7 @@ plt.savefig('tree.svg', format='svg', bbox_inches="tight")
 - [ ] Pandas DataFrame compatibility
 - [ ] Fidelity
 
-See the [open issues](https://github.com/detsutut/AraucanaXAI/issues) for a full list of proposed features (and known issues).
+See the [open issues](https://github.com/detsutut/AraucanaXAI/blob/master/example.ipynb) for a full list of proposed features (and known issues).
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
