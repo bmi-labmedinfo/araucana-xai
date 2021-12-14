@@ -8,11 +8,12 @@ from gower import gower_matrix
 from imblearn.over_sampling import SMOTENC, SMOTEN
 
 
-def load_breast_cancer(train_split=constants.SPLIT, cat = True):
+def load_breast_cancer(train_split=constants.SPLIT, cat=True):
     """
     Load toy dataset crafted from the breast cancer wisconsin dataset.
 
     :param train_split: proportion of training data
+    :param cat: boolean flag to specify if the dataset should contain also categorical features
 
     :returns:
         - X_train: training set
@@ -25,6 +26,7 @@ def load_breast_cancer(train_split=constants.SPLIT, cat = True):
     cancer = datasets.load_breast_cancer()
     cancer.data = cancer.data[:, 0:10]
     cancer.feature_names = cancer.feature_names[0:10]
+    # if cat, convert the first 5 features from continuous to discrete values
     if cat:
         for i in range(0, 5):
             cancer.data[:, i] = cancer.data[:, i] > np.mean(cancer.data[:, i])
@@ -41,7 +43,8 @@ def load_breast_cancer(train_split=constants.SPLIT, cat = True):
     }
 
 
-def __find_neighbours(target: np.ndarray, data: np.ndarray, cat_list: list, n: int = constants.NEIGHBOURHOOD_SIZE):
+def __find_neighbours(target: np.ndarray, data: np.ndarray, cat_list: list = None,
+                      n: int = constants.NEIGHBOURHOOD_SIZE):
     """
     Finds the n nearest neighbours to the target example according to the Gower distance.
 
@@ -63,7 +66,7 @@ def __find_neighbours(target: np.ndarray, data: np.ndarray, cat_list: list, n: i
     return local_training_set
 
 
-def __oversample(x_local, x_instance, y_local_pred, y_instance_pred, cat_list: list, seed: int = constants.SEED):
+def __oversample(x_local, x_instance, y_local_pred, y_instance_pred, cat_list: list = None, seed: int = constants.SEED):
     """
     Local data augmentation with SMOTE (Synthetic Minority Oversampling TEchnique).
 
@@ -82,26 +85,31 @@ def __oversample(x_local, x_instance, y_local_pred, y_instance_pred, cat_list: l
     else:
         smote = SMOTENC(categorical_features=np.where(cat_list)[0].tolist(), random_state=seed, sampling_strategy='all')
     return smote.fit_resample(np.concatenate((x_local, x_instance)),
-                                 np.append(y_local_pred, y_instance_pred))
+                              np.append(y_local_pred, y_instance_pred))
 
 
-def __create_tree(X, y, X_features, seed=constants.SEED):
+def __create_tree(X, y, X_features, max_depth=constants.MAX_DEPTH,
+                  min_samples_leaf=constants.MIN_SAMPLES_LEAF, seed=constants.SEED):
     """
     Grow a classification tree without pruning.
 
     :param X: training set
     :param y: class to be predicted
     :param X_features: feature names
+    :param max_depth: the maximum depth of the tree. If None, no depth-based pruning is applied.
+    :param min_samples_leaf: the minimum number of samples required to be at a leaf node. If int, the value is the minimum number. If float, then ceil(min_samples_leaf*n_samples) is the minimum number of samples for each node.
     :param seed: specify random state
 
     :return: classification tree
     """
-    clf_tree_0 = tree.DecisionTreeClassifier(random_state=seed)
+    clf_tree_0 = tree.DecisionTreeClassifier(max_depth=max_depth, min_samples_leaf=min_samples_leaf, random_state=seed)
     clf_tree_0.fit(DataFrame(X, columns=X_features), y)
     return clf_tree_0
 
 
-def run(x_target, y_pred_target, data_train, feature_names, cat_list, predict_fun, neighbourhood_size=constants.NEIGHBOURHOOD_SIZE, seed=constants.SEED):
+def run(x_target, y_pred_target, data_train, feature_names, cat_list, predict_fun,
+        neighbourhood_size=constants.NEIGHBOURHOOD_SIZE, oversampling=constants.OVERSAMPLING,
+        max_depth=constants.MAX_DEPTH, min_samples_leaf=constants.MIN_SAMPLES_LEAF, seed=constants.SEED):
     """
     Run the AraucanaXAI algorithm and plot the calssification tree.
 
@@ -112,6 +120,9 @@ def run(x_target, y_pred_target, data_train, feature_names, cat_list, predict_fu
     :param cat_list: list of booleans to specify which variables are categorical
     :param predict_fun: function used to predict the outcomes, i.e. the model we want to explain. Function must have one input only: the data.
     :param neighbourhood_size: specify the number of neighbours to consider
+    :param oversampling: specify if neighborhood oversampling should be used. Default: True
+    :param max_depth: the maximum depth of the tree. If None, no depth-based pruning is applied. Default: None
+    :param min_samples_leaf: the minimum number of samples required to be at a leaf node. If int, the value is the minimum number. If float, then ceil(min_samples_leaf*n_samples) is the minimum number of samples for each node. Default: 1
     :param seed: specify random state
 
     :returns:
@@ -124,8 +135,11 @@ def run(x_target, y_pred_target, data_train, feature_names, cat_list, predict_fu
                                     cat_list=cat_list,
                                     n=neighbourhood_size)
     y_local_train = predict_fun(local_train)
-    if len(np.unique(y_local_train)) < 2:
-        warn('Cannot oversample: local y needs to have more than 1 class to perform SMOTE oversampling. Got 1 class instead.')
+    if len(np.unique(y_local_train)) < 2: # less than 2 classes = no SMOTE oversampling
+        warn('Cannot oversample: local y needs to have more than 1 class to perform SMOTE oversampling. Got 1 class '
+             'instead.')
+        oversampling = False              # set oversampling to false
+    if not oversampling:
         X_res = np.concatenate((local_train, x_target))
         y_res = np.append(y_local_train, y_pred_target)
     else:
@@ -135,7 +149,8 @@ def run(x_target, y_pred_target, data_train, feature_names, cat_list, predict_fu
                                     y_instance_pred=y_pred_target,
                                     cat_list=cat_list,
                                     seed=seed)
-    xai_c = __create_tree(X_res, y_res, feature_names, seed=seed)
+    xai_c = __create_tree(X_res, y_res, feature_names,
+                          max_depth = max_depth, min_samples_leaf = min_samples_leaf, seed=seed)
     return {'tree': xai_c,
             'data': [X_res, y_res],
             'acc': xai_c.score(X_res, y_res)}
