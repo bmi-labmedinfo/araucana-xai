@@ -33,6 +33,10 @@ xai_tree = araucanaxai.run(x_target=instance, y_pred_target=instance_pred_y,
 fig, ax = plt.subplots(figsize=(10, 10))
 tree.plot_tree(xai_tree['tree'], feature_names=data["feature_names"], filled=True, class_names=data["target_names"])
 plt.tight_layout()
-#plt.show()
+plt.show()
 # or just save it
-plt.savefig('tree.svg', format='svg', bbox_inches="tight")
+# plt.savefig('tree.svg', format='svg', bbox_inches="tight")
+
+xai_tree_2 = araucanaxai.run(x_target=instance2, y_pred_target=instance_pred_y,
+                       data_train=data["X_train"], feature_names=data["feature_names"], cat_list=is_cat,
+                       predict_fun=classifier.predict)
