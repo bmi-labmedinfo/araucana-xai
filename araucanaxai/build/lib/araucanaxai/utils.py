@@ -45,6 +45,18 @@ def load_breast_cancer(train_split=constants.SPLIT, cat=True):
 
 def __find_nearest_class(target: np.ndarray, data: np.ndarray, data_class: np.ndarray, val_class: 0, min_size=1,
                          cat_list: list = None):
+    """
+    Finds the closest instance that satisfies the condition of having at least min_size instances of a class different than val_class.
+
+    :param target: target example
+    :param data: data where to find the nearest neighbours
+    :param data_class: data labels
+    :param val_class: value of the majority label
+    :param min_size: desired minimum number of neighbours with a label that is not val_class
+    :param cat_list: list of booleans to specify which variables are categorical
+
+    :return: index of the closest instance that satisfies the condition
+    """
     d_gow = gower_matrix(target, data, cat_features=cat_list)
     d2index = dict(zip(d_gow[0].tolist(), list(range(data.shape[0]))))
     my_index = [d2index[i] for i in np.sort(d_gow)[0].tolist()]
@@ -80,14 +92,26 @@ def __find_neighbours(target: np.ndarray, data: np.ndarray, cat_list: list = Non
 
 def __random_oversample(x_local, x_instance, cat_list: list = None, size: int = 1, uniform: bool = True,
                         seed: int = constants.SEED):
+    """
+    Local data augmentation by randomly generate new instances. Non-uniform random oversampling will use sample statistics to generate the new instances.
+
+    :param x_local: local set of examples to use for oversampling
+    :param x_instance: target example
+    :param cat_list: list of booleans to specify which variables are categorical
+    :param size: number of new instances to generate
+    :param uniform: specify if the new instances must be drawn from uniform distribution or not
+    :param seed: specify random state
+
+    :return: oversampled local data
+    """
     x = np.concatenate((x_local, x_instance))
-    o = np.zeros((size,x.shape[1]))
+    o = np.zeros((size, x.shape[1]))
     np.random.seed(seed)
     for i in range(x.shape[1]):
         column = x[:, i]
         if cat_list is not None and cat_list[i]:
             if uniform:
-                o[:, i] = np.random.randint(low=int(np.min(column)), high=int(np.max(column))+1, size=size)
+                o[:, i] = np.random.randint(low=int(np.min(column)), high=int(np.max(column)) + 1, size=size)
             else:
                 vals, counts = np.unique(column, return_counts=True)
                 o[:, i] = np.random.choice(a=np.unique(column), size=size, p=counts / sum(counts))
@@ -112,6 +136,8 @@ def __oversample(x_local, x_instance,
     :param y_local_pred: predicted class for the local set of examples
     :param y_instance_pred: predicted class for the target instance
     :param cat_list: list of booleans to specify which variables are categorical
+    :param oversampling_type: type of oversampling. Possible values: smote, uniform, non-uniform
+    :param oversampling_size: number of new instances to be generated. Not used when oversampling_type=smote
     :param seed: specify random state
 
     :return: oversampled local data
@@ -123,10 +149,11 @@ def __oversample(x_local, x_instance,
             smote = SMOTENC(categorical_features=np.where(cat_list)[0].tolist(), random_state=seed,
                             sampling_strategy='all')
         return smote.fit_resample(np.concatenate((x_local, x_instance)),
-                                  np.append(y_local_pred, y_instance_pred))[0] #return X only, we don't need y
+                                  np.append(y_local_pred, y_instance_pred))[0]  # return X only, we don't need y
     else:
         return __random_oversample(x_local=x_local, x_instance=x_instance,
-                                   cat_list=cat_list, size=oversampling_size, uniform=(oversampling_type == "uniform"), seed=seed)
+                                   cat_list=cat_list, size=oversampling_size, uniform=(oversampling_type == "uniform"),
+                                   seed=seed)
 
 
 def __create_tree(X, y, X_features, max_depth=constants.MAX_DEPTH,
@@ -149,12 +176,18 @@ def __create_tree(X, y, X_features, max_depth=constants.MAX_DEPTH,
 
 
 def __sort_unique_by_freq(array: np.array):
+    """
+    Return unique values of an array, sorted by descending frequency
+    """
     unique_elements, frequency = np.unique(array, return_counts=True)
     sorted_indexes = np.argsort(frequency)[::-1]
     return unique_elements[sorted_indexes]
 
 
 def __get_suggested_min_n_smote(x_target, x_train, y_local, y_train, cat_list):
+    """
+    Return the minimum neighborhood size for smote
+    """
     k = SMOTEN().k_neighbors + 1  # default k used in SMOTE (+1 to include the target instance)
     y_most_freq = __sort_unique_by_freq(y_local)[0]
     return __find_nearest_class(x_target, x_train, y_train, y_most_freq, k, cat_list) + 1
@@ -162,7 +195,7 @@ def __get_suggested_min_n_smote(x_target, x_train, y_local, y_train, cat_list):
 
 def run(x_target, y_pred_target, x_train, feature_names, cat_list, predict_fun,
         neighbourhood_size=constants.NEIGHBOURHOOD_SIZE, oversampling=constants.OVERSAMPLING,
-        oversampling_type=constants.OVERSAMPLING_TYPE, oversampling_size = constants.OVERSAMPLING_SIZE,
+        oversampling_type=constants.OVERSAMPLING_TYPE, oversampling_size=constants.OVERSAMPLING_SIZE,
         max_depth=constants.MAX_DEPTH, min_samples_leaf=constants.MIN_SAMPLES_LEAF, seed=constants.SEED):
     """
     Run the AraucanaXAI algorithm and plot the calssification tree.
@@ -175,6 +208,8 @@ def run(x_target, y_pred_target, x_train, feature_names, cat_list, predict_fun,
     :param predict_fun: function used to predict the outcomes, i.e. the model we want to explain. Function must have one input only: the data.
     :param neighbourhood_size: specify the number of neighbours to consider
     :param oversampling: specify if neighborhood oversampling should be used. Default: True
+    :param oversampling_type: type of oversampling. Possible values: smote, uniform, non-uniform. Default: smote
+    :param oversampling_size: number of new instances to be generated. Not used when oversampling_type=smote. Default: 100
     :param max_depth: the maximum depth of the tree. If None, no depth-based pruning is applied. Default: None
     :param min_samples_leaf: the minimum number of samples required to be at a leaf node. If int, the value is the minimum number. If float, then ceil(min_samples_leaf*n_samples) is the minimum number of samples for each node. Default: 1
     :param seed: specify random state
@@ -194,7 +229,7 @@ def run(x_target, y_pred_target, x_train, feature_names, cat_list, predict_fun,
                                                   y_local=y_local_train,
                                                   y_train=predict_fun(x_train),
                                                   cat_list=cat_list)
-    if neighbourhood_size < suggested_min_n and oversampling_type=="smote":  # less than 2 classes = no SMOTE oversampling
+    if neighbourhood_size < suggested_min_n and oversampling_type == "smote":  # less than 2 classes = no SMOTE oversampling
         warn(
             "Cannot run SMOTE oversampling due to insufficient neighborhood size. Required minimum neighborhood size: %d . Oversampling skipped." % suggested_min_n)
         oversampling = False  # set oversampling to false
