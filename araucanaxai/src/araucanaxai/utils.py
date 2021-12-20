@@ -149,6 +149,7 @@ def run(x_target, y_pred_target, data_train, feature_names, cat_list, predict_fu
                                     y_instance_pred=y_pred_target,
                                     cat_list=cat_list,
                                     seed=seed)
+        y_res = predict_fun(X_res)
     xai_c = __create_tree(X_res, y_res, feature_names,
                           max_depth = max_depth, min_samples_leaf = min_samples_leaf, seed=seed)
     return {'tree': xai_c,

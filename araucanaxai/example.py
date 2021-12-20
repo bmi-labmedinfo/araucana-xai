@@ -29,7 +29,7 @@ instance_pred_y = y_test_pred[index]
 # build xai tree to explain the instance classification
 xai_tree = araucanaxai.run(x_target=instance, y_pred_target=instance_pred_y,
                            data_train=data["X_train"], feature_names=data["feature_names"], cat_list=is_cat,
-                           neighbourhood_size=100, oversampling=True,
+                           neighbourhood_size=200, oversampling=True,
                            max_depth=3, min_samples_leaf=1,
                            predict_fun=classifier.predict)
 
