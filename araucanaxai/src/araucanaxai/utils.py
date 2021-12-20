@@ -78,7 +78,32 @@ def __find_neighbours(target: np.ndarray, data: np.ndarray, cat_list: list = Non
     return local_training_set
 
 
-def __oversample(x_local, x_instance, y_local_pred, y_instance_pred, cat_list: list = None, seed: int = constants.SEED):
+def __random_oversample(x_local, x_instance, cat_list: list = None, size: int = 1, uniform: bool = True,
+                        seed: int = constants.SEED):
+    x = np.concatenate((x_local, x_instance))
+    o = np.zeros((size,x.shape[1]))
+    np.random.seed(seed)
+    for i in range(x.shape[1]):
+        column = x[:, i]
+        if cat_list is not None and cat_list[i]:
+            if uniform:
+                o[:, i] = np.random.randint(low=int(np.min(column)), high=int(np.max(column))+1, size=size)
+            else:
+                vals, counts = np.unique(column, return_counts=True)
+                o[:, i] = np.random.choice(a=np.unique(column), size=size, p=counts / sum(counts))
+        else:
+            if uniform:
+                o[:, i] = np.random.uniform(low=np.min(column), high=np.max(column), size=size)
+            else:  # if not uniform, we can generate from normal distribution
+                mu, sigma = np.mean(column), np.std(column)  # mean and standard deviation
+                o[:, i] = np.random.normal(mu, sigma, size=size)
+    return o
+
+
+def __oversample(x_local, x_instance,
+                 y_local_pred, y_instance_pred,
+                 cat_list: list = None, oversampling_type=["smote", "uniform", "non-uniform"],
+                 oversampling_size: int = 100, seed: int = constants.SEED):
     """
     Local data augmentation with SMOTE (Synthetic Minority Oversampling TEchnique).
 
@@ -91,12 +116,17 @@ def __oversample(x_local, x_instance, y_local_pred, y_instance_pred, cat_list: l
 
     :return: oversampled local data
     """
-    if cat_list is None:
-        smote = SMOTEN(random_state=seed, sampling_strategy='all')
+    if oversampling_type == "smote":
+        if cat_list is None:
+            smote = SMOTEN(random_state=seed, sampling_strategy='all')
+        else:
+            smote = SMOTENC(categorical_features=np.where(cat_list)[0].tolist(), random_state=seed,
+                            sampling_strategy='all')
+        return smote.fit_resample(np.concatenate((x_local, x_instance)),
+                                  np.append(y_local_pred, y_instance_pred))[0] #return X only, we don't need y
     else:
-        smote = SMOTENC(categorical_features=np.where(cat_list)[0].tolist(), random_state=seed, sampling_strategy='all')
-    return smote.fit_resample(np.concatenate((x_local, x_instance)),
-                              np.append(y_local_pred, y_instance_pred))
+        return __random_oversample(x_local=x_local, x_instance=x_instance,
+                                   cat_list=cat_list, size=oversampling_size, uniform=(oversampling_type == "uniform"), seed=seed)
 
 
 def __create_tree(X, y, X_features, max_depth=constants.MAX_DEPTH,
@@ -132,6 +162,7 @@ def __get_suggested_min_n_smote(x_target, x_train, y_local, y_train, cat_list):
 
 def run(x_target, y_pred_target, x_train, feature_names, cat_list, predict_fun,
         neighbourhood_size=constants.NEIGHBOURHOOD_SIZE, oversampling=constants.OVERSAMPLING,
+        oversampling_type=constants.OVERSAMPLING_TYPE, oversampling_size = constants.OVERSAMPLING_SIZE,
         max_depth=constants.MAX_DEPTH, min_samples_leaf=constants.MIN_SAMPLES_LEAF, seed=constants.SEED):
     """
     Run the AraucanaXAI algorithm and plot the calssification tree.
@@ -163,7 +194,7 @@ def run(x_target, y_pred_target, x_train, feature_names, cat_list, predict_fun,
                                                   y_local=y_local_train,
                                                   y_train=predict_fun(x_train),
                                                   cat_list=cat_list)
-    if neighbourhood_size < suggested_min_n:  # less than 2 classes = no SMOTE oversampling
+    if neighbourhood_size < suggested_min_n and oversampling_type=="smote":  # less than 2 classes = no SMOTE oversampling
         warn(
             "Cannot run SMOTE oversampling due to insufficient neighborhood size. Required minimum neighborhood size: %d . Oversampling skipped." % suggested_min_n)
         oversampling = False  # set oversampling to false
@@ -171,12 +202,14 @@ def run(x_target, y_pred_target, x_train, feature_names, cat_list, predict_fun,
         X_res = np.concatenate((local_train, x_target))
         y_res = np.append(y_local_train, y_pred_target)
     else:
-        X_res, y_res = __oversample(x_local=local_train,
-                                    x_instance=x_target,
-                                    y_local_pred=y_local_train,
-                                    y_instance_pred=y_pred_target,
-                                    cat_list=cat_list,
-                                    seed=seed)
+        X_res = __oversample(x_local=local_train,
+                             x_instance=x_target,
+                             y_local_pred=y_local_train,
+                             y_instance_pred=y_pred_target,
+                             cat_list=cat_list,
+                             oversampling_type=oversampling_type,
+                             oversampling_size=oversampling_size,
+                             seed=seed)
         y_res = predict_fun(X_res)
     xai_c = __create_tree(X_res, y_res, feature_names,
                           max_depth=max_depth, min_samples_leaf=min_samples_leaf, seed=seed)

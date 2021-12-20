@@ -5,7 +5,7 @@ from sklearn.metrics import *
 import matplotlib.pyplot as plt
 
 # load toy dataset with both categorical and numerical features
-cat_data = False
+cat_data = True
 data = araucanaxai.load_breast_cancer(train_split=.75, cat=cat_data)
 is_cat = None
 if cat_data:
@@ -29,7 +29,8 @@ instance_pred_y = y_test_pred[index]
 # build xai tree to explain the instance classification
 xai_tree = araucanaxai.run(x_target=instance, y_pred_target=instance_pred_y,
                            x_train=data["X_train"],feature_names=data["feature_names"], cat_list=is_cat,
-                           neighbourhood_size=81, oversampling=True,
+                           neighbourhood_size=150, oversampling=True,
+                           oversampling_type="smote", oversampling_size=100,
                            max_depth=3, min_samples_leaf=1,
                            predict_fun=classifier.predict)
 
