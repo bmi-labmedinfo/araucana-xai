@@ -22,14 +22,14 @@ print('precision: ' + str(precision_score(data["y_test"], y_test_pred)) + ', rec
     recall_score(data["y_test"], y_test_pred)))
 
 # declare the instance we want to explain
-index = 17
+index = 65
 instance = data["X_test"][index, :].reshape(1, data["X_test"].shape[1])
 instance_pred_y = y_test_pred[index]
 
 # build xai tree to explain the instance classification
 xai_tree = araucanaxai.run(x_target=instance, y_pred_target=instance_pred_y,
-                           data_train=data["X_train"], feature_names=data["feature_names"], cat_list=is_cat,
-                           neighbourhood_size=200, oversampling=True,
+                           x_train=data["X_train"],feature_names=data["feature_names"], cat_list=is_cat,
+                           neighbourhood_size=81, oversampling=True,
                            max_depth=3, min_samples_leaf=1,
                            predict_fun=classifier.predict)
 

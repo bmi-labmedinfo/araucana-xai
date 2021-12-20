@@ -43,6 +43,18 @@ def load_breast_cancer(train_split=constants.SPLIT, cat=True):
     }
 
 
+def __find_nearest_class(target: np.ndarray, data: np.ndarray, data_class: np.ndarray, val_class: 0, min_size=1,
+                         cat_list: list = None):
+    d_gow = gower_matrix(target, data, cat_features=cat_list)
+    d2index = dict(zip(d_gow[0].tolist(), list(range(data.shape[0]))))
+    my_index = [d2index[i] for i in np.sort(d_gow)[0].tolist()]
+    local_training_set_y = data_class[my_index]  # sorted y
+    # first index that satisfies the condition of having at least min_size instances
+    # where y!=y_target
+    min_index = np.where(local_training_set_y != val_class)[0][min_size - 1]
+    return min_index
+
+
 def __find_neighbours(target: np.ndarray, data: np.ndarray, cat_list: list = None,
                       n: int = constants.NEIGHBOURHOOD_SIZE):
     """
@@ -79,7 +91,6 @@ def __oversample(x_local, x_instance, y_local_pred, y_instance_pred, cat_list: l
 
     :return: oversampled local data
     """
-    ##### wip
     if cat_list is None:
         smote = SMOTEN(random_state=seed, sampling_strategy='all')
     else:
@@ -107,16 +118,28 @@ def __create_tree(X, y, X_features, max_depth=constants.MAX_DEPTH,
     return clf_tree_0
 
 
-def run(x_target, y_pred_target, data_train, feature_names, cat_list, predict_fun,
+def __sort_unique_by_freq(array: np.array):
+    unique_elements, frequency = np.unique(array, return_counts=True)
+    sorted_indexes = np.argsort(frequency)[::-1]
+    return unique_elements[sorted_indexes]
+
+
+def __get_suggested_min_n_smote(x_target, x_train, y_local, y_train, cat_list):
+    k = SMOTEN().k_neighbors + 1  # default k used in SMOTE (+1 to include the target instance)
+    y_most_freq = __sort_unique_by_freq(y_local)[0]
+    return __find_nearest_class(x_target, x_train, y_train, y_most_freq, k, cat_list) + 1
+
+
+def run(x_target, y_pred_target, x_train, feature_names, cat_list, predict_fun,
         neighbourhood_size=constants.NEIGHBOURHOOD_SIZE, oversampling=constants.OVERSAMPLING,
         max_depth=constants.MAX_DEPTH, min_samples_leaf=constants.MIN_SAMPLES_LEAF, seed=constants.SEED):
     """
     Run the AraucanaXAI algorithm and plot the calssification tree.
 
-    :param x_target: local set of examples to use for oversampling
-    :param y_pred_target: target example
-    :param data_train: predicted class for the local set of examples
-    :param feature_names: predicted class for the target instance
+    :param x_target:
+    :param y_pred_target:
+    :param x_train:
+    :param feature_names:
     :param cat_list: list of booleans to specify which variables are categorical
     :param predict_fun: function used to predict the outcomes, i.e. the model we want to explain. Function must have one input only: the data.
     :param neighbourhood_size: specify the number of neighbours to consider
@@ -131,14 +154,19 @@ def run(x_target, y_pred_target, data_train, feature_names, cat_list, predict_fu
         - acc: accuracy on resampled data
     """
     local_train = __find_neighbours(target=x_target,
-                                    data=data_train,
+                                    data=x_train,
                                     cat_list=cat_list,
                                     n=neighbourhood_size)
     y_local_train = predict_fun(local_train)
-    if len(np.unique(y_local_train)) < 2: # less than 2 classes = no SMOTE oversampling
-        warn('Cannot oversample: local y needs to have more than 1 class to perform SMOTE oversampling. Got 1 class '
-             'instead.')
-        oversampling = False              # set oversampling to false
+    suggested_min_n = __get_suggested_min_n_smote(x_target=x_target,
+                                                  x_train=x_train,
+                                                  y_local=y_local_train,
+                                                  y_train=predict_fun(x_train),
+                                                  cat_list=cat_list)
+    if neighbourhood_size < suggested_min_n:  # less than 2 classes = no SMOTE oversampling
+        warn(
+            "Cannot run SMOTE oversampling due to insufficient neighborhood size. Required minimum neighborhood size: %d . Oversampling skipped." % suggested_min_n)
+        oversampling = False  # set oversampling to false
     if not oversampling:
         X_res = np.concatenate((local_train, x_target))
         y_res = np.append(y_local_train, y_pred_target)
@@ -151,7 +179,7 @@ def run(x_target, y_pred_target, data_train, feature_names, cat_list, predict_fu
                                     seed=seed)
         y_res = predict_fun(X_res)
     xai_c = __create_tree(X_res, y_res, feature_names,
-                          max_depth = max_depth, min_samples_leaf = min_samples_leaf, seed=seed)
+                          max_depth=max_depth, min_samples_leaf=min_samples_leaf, seed=seed)
     return {'tree': xai_c,
             'data': [X_res, y_res],
             'acc': xai_c.score(X_res, y_res)}
