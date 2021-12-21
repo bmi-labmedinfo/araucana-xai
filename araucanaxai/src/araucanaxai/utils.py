@@ -126,7 +126,7 @@ def __random_oversample(x_local, x_instance, cat_list: list = None, size: int = 
 
 def __oversample(x_local, x_instance,
                  y_local_pred, y_instance_pred,
-                 cat_list: list = None, oversampling_type=["smote", "uniform", "non-uniform"],
+                 cat_list: list = None, oversampling: str = None,
                  oversampling_size: int = 100, seed: int = constants.SEED):
     """
     Local data augmentation with SMOTE (Synthetic Minority Oversampling TEchnique).
@@ -136,13 +136,13 @@ def __oversample(x_local, x_instance,
     :param y_local_pred: predicted class for the local set of examples
     :param y_instance_pred: predicted class for the target instance
     :param cat_list: list of booleans to specify which variables are categorical
-    :param oversampling_type: type of oversampling. Possible values: smote, uniform, non-uniform
+    :param oversampling: type of oversampling. Possible values: smote, uniform, non-uniform, none. Default: None
     :param oversampling_size: number of new instances to be generated. Not used when oversampling_type=smote
     :param seed: specify random state
 
     :return: oversampled local data
     """
-    if oversampling_type == "smote":
+    if oversampling == "smote":
         if cat_list is None:
             smote = SMOTEN(random_state=seed, sampling_strategy='all')
         else:
@@ -152,7 +152,7 @@ def __oversample(x_local, x_instance,
                                   np.append(y_local_pred, y_instance_pred))[0]  # return X only, we don't need y
     else:
         return __random_oversample(x_local=x_local, x_instance=x_instance,
-                                   cat_list=cat_list, size=oversampling_size, uniform=(oversampling_type == "uniform"),
+                                   cat_list=cat_list, size=oversampling_size, uniform=(oversampling == "uniform"),
                                    seed=seed)
 
 
@@ -195,7 +195,7 @@ def __get_suggested_min_n_smote(x_target, x_train, y_local, y_train, cat_list):
 
 def run(x_target, y_pred_target, x_train, feature_names, cat_list, predict_fun,
         neighbourhood_size=constants.NEIGHBOURHOOD_SIZE, oversampling=constants.OVERSAMPLING,
-        oversampling_type=constants.OVERSAMPLING_TYPE, oversampling_size=constants.OVERSAMPLING_SIZE,
+        oversampling_size=constants.OVERSAMPLING_SIZE,
         max_depth=constants.MAX_DEPTH, min_samples_leaf=constants.MIN_SAMPLES_LEAF, seed=constants.SEED):
     """
     Run the AraucanaXAI algorithm and plot the calssification tree.
@@ -207,8 +207,7 @@ def run(x_target, y_pred_target, x_train, feature_names, cat_list, predict_fun,
     :param cat_list: list of booleans to specify which variables are categorical
     :param predict_fun: function used to predict the outcomes, i.e. the model we want to explain. Function must have one input only: the data.
     :param neighbourhood_size: specify the number of neighbours to consider
-    :param oversampling: specify if neighborhood oversampling should be used. Default: True
-    :param oversampling_type: type of oversampling. Possible values: smote, uniform, non-uniform. Default: smote
+    :param oversampling: type of oversampling. Possible values: smote, uniform, non-uniform, none. Default: None
     :param oversampling_size: number of new instances to be generated. Not used when oversampling_type=smote. Default: 100
     :param max_depth: the maximum depth of the tree. If None, no depth-based pruning is applied. Default: None
     :param min_samples_leaf: the minimum number of samples required to be at a leaf node. If int, the value is the minimum number. If float, then ceil(min_samples_leaf*n_samples) is the minimum number of samples for each node. Default: 1
@@ -219,6 +218,8 @@ def run(x_target, y_pred_target, x_train, feature_names, cat_list, predict_fun,
         - data: resampled data
         - acc: accuracy on resampled data
     """
+
+    # 1) FIND NEIGHBOURS
     local_train = __find_neighbours(target=x_target,
                                     data=x_train,
                                     cat_list=cat_list,
@@ -229,23 +230,33 @@ def run(x_target, y_pred_target, x_train, feature_names, cat_list, predict_fun,
                                                   y_local=y_local_train,
                                                   y_train=predict_fun(x_train),
                                                   cat_list=cat_list)
-    if neighbourhood_size < suggested_min_n and oversampling_type == "smote":  # less than 2 classes = no SMOTE oversampling
-        warn(
-            "Cannot run SMOTE oversampling due to insufficient neighborhood size. Required minimum neighborhood size: %d . Oversampling skipped." % suggested_min_n)
-        oversampling = False  # set oversampling to false
-    if not oversampling:
-        X_res = np.concatenate((local_train, x_target))
-        y_res = np.append(y_local_train, y_pred_target)
-    else:
+
+    # 2) OVERSAMPLING
+    os_check_passed = False
+    if oversampling is not None:
+        if oversampling == "smote" and (neighbourhood_size < suggested_min_n):
+            warn(
+                "Cannot run SMOTE oversampling due to insufficient neighborhood size. Required minimum neighborhood size: %d . Oversampling skipped." % suggested_min_n)
+        elif oversampling in ["smote", "uniform", "non-uniform"]:
+            os_check_passed = True
+        else:
+            warn("Unrecognized oversampling type. Supported methods: smote, uniform, non-uniform.")
+
+    if os_check_passed:
         X_res = __oversample(x_local=local_train,
                              x_instance=x_target,
                              y_local_pred=y_local_train,
                              y_instance_pred=y_pred_target,
                              cat_list=cat_list,
-                             oversampling_type=oversampling_type,
+                             oversampling=oversampling,
                              oversampling_size=oversampling_size,
                              seed=seed)
         y_res = predict_fun(X_res)
+    else:
+        X_res = np.concatenate((local_train, x_target))
+        y_res = np.append(y_local_train, y_pred_target)
+
+    # 3) CREATE TREE
     xai_c = __create_tree(X_res, y_res, feature_names,
                           max_depth=max_depth, min_samples_leaf=min_samples_leaf, seed=seed)
     return {'tree': xai_c,
