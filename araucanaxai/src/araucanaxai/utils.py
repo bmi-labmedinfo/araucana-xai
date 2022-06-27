@@ -1,6 +1,7 @@
 from . import constants
 from warnings import warn
 from pandas import DataFrame
+from math import ceil
 import numpy as np
 from sklearn import tree
 from sklearn import datasets
@@ -68,7 +69,7 @@ def __find_nearest_class(target: np.ndarray, data: np.ndarray, data_class: np.nd
 
 
 def __find_neighbours(target: np.ndarray, data: np.ndarray, cat_list: list = None,
-                      n: int = constants.NEIGHBOURHOOD_SIZE):
+                      n=constants.NEIGHBOURHOOD_SIZE):
     """
     Finds the n nearest neighbours to the target example according to the Gower distance.
 
@@ -84,6 +85,9 @@ def __find_neighbours(target: np.ndarray, data: np.ndarray, cat_list: list = Non
     d_gow = gower_matrix(target, data, cat_features=cat_list)
     # Let's select the first k neighbours
     d2index = dict(zip(d_gow[0].tolist(), list(range(data.shape[0]))))
+    # Check on n: if less than 1, it has to be considered as % of training set
+    if n < 1:
+        n = int(ceil(data.shape[0] * n))
     my_index = [d2index[i] for i in np.sort(d_gow)[0][0:n].tolist()]
     # nk nearest neighbours in the training set according to gower distance
     local_training_set = data[my_index, :]
