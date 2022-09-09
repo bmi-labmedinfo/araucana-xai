@@ -1,0 +1,17 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+authors:
+- family-names: "Buonocore"
+  given-names: "Tommaso Mario"
+  orcid: "https://orcid.org/0000-0002-2887-088X"
+- family-names: "Giovanna"
+  given-names: "Nicora"
+  orcid: "https://orcid.org/0000-0001-7007-0862"
+- family-names: "Enea"
+  given-names: "Parimbelli"
+  orcid: "https://orcid.org/0000-0003-0679-828X"
+title: "Araucana XAI"
+version: 1.0.0
+doi: 10.5281/zenodo.1234
+date-released: 2022-09-09
+url: "https://github.com/detsutut/AraucanaXAI"
