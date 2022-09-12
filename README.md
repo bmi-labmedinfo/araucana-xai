@@ -17,7 +17,7 @@
   [![Status][status-shield]][status-url]
 
   <p align="center">
-    Repository for the <a href="https://pypi.org/project/araucanaxai/">araucanaxai</a> package. Implementation of the pipeline described in <a href="https://arxiv.org/abs/2110.08272">Parimbelli et al., 2021</a>.
+    Repository for the <a href="https://pypi.org/project/araucanaxai/">araucanaxai</a> package. Implementation of the pipeline first described in <a href="https://arxiv.org/abs/2110.08272">Parimbelli et al., 2021</a>.
     <br />
     <a href="https://github.com/detsutut/AraucanaXAI"><strong>Explore the docs »</strong></a>
     <br />
@@ -37,10 +37,9 @@
     <li><a href="#about-the-project">About The Project</a></li>
     <li><a href="#installation">Installation</a></li>
     <li><a href="#usage">Usage</a></li>
-    <li><a href="#roadmap">Roadmap</a></li>
+    <li><a href="#publications">Publications</a></li>
+    <li><a href="#contacts-and-useful-links">Contacts And Useful Links</a></li>
     <li><a href="#license">License</a></li>
-    <li><a href="#contact">Contact</a></li>
-    <li><a href="#acknowledgments">Acknowledgments</a></li>
   </ol>
 </details>
 
@@ -51,15 +50,9 @@
 
 Increasingly complex learning methods such as boosting, bagging and deep learning have made ML models more accurate, but harder to understand and interpret. A tradeoff between performance and intelligibility is often to be faced, especially in high-stakes applications like medicine. This project proposes a novel methodological approach for generating explanations of the predictions of a generic ML model, given a specific instance for which the prediction has been made, that can tackle both classification and regression tasks. Advantages of the proposed XAI approach include improved fidelity to the original model, the ability to deal with non-linear decision boundaries, and native support to both classification and regression problems.
 
-### Paper
-The araucanaxai package implements the pipeline described in <a href="https://arxiv.org/abs/2110.08272">*Tree-based local explanations of machine learning model predictions - Parimbelli et al., 2021*</a>.
-
-XAI-Healthcare International Workshop presentation:<br/>
-[![XAI-Healthcare International Workshop](https://img.youtube.com/vi/N22QYvTZFBk/0.jpg)](https://www.youtube.com/watch?v=N22QYvTZFBk)
-
 **Keywords**: *explainable AI, explanations, local explanation, fidelity, interpretability, transparency, trustworthy AI, black-box, machine learning, feature importance, decision tree, CART, AIM*.
 
-<p align="right">(<a href="#top">back to top</a>)</p>
+<p align="right"><a href="#top">↰ Back To Top</a></p>
 
 <!-- INSTALLATION -->
 ## Installation
@@ -73,7 +66,7 @@ XAI-Healthcare International Workshop presentation:<br/>
     pip install araucanaxai
     ```
 
-<p align="right">(<a href="#top">back to top</a>)</p>
+<p align="right"><a href="#top">↰ Back To Top</a></p>
 
 <!-- USAGE EXAMPLES -->
 ## Usage
@@ -134,55 +127,52 @@ plt.show()
 
 You can also check the notebook [here](https://github.com/detsutut/AraucanaXAI/blob/master/example.ipynb).
 
-<p align="right">(<a href="#top">back to top</a>)</p>
-
-
-
-<!-- ROADMAP -->
-## Roadmap
-
-- [x] Basic implementation
-- [x] Parameters tuning: oversampling yes/no, pruning, neighborhood size
-- [ ] Pandas DataFrame compatibility
-- [ ] Fidelity
-
 See the [open issues](https://github.com/detsutut/AraucanaXAI/issues) for a full list of proposed features (and known issues).
 
-<p align="right">(<a href="#top">back to top</a>)</p>
+<p align="right"><a href="#top">↰ Back To Top</a></p>
 
+<!-- PUBLICATIONS -->
+## Publications
+
+* _Tree-based Local Explanations of Machine Learning Model Predictions - Parimbelli et al., 2021_ ([link](https://arxiv.org/abs/2110.08272))
+
+* _Evaluation of XAI on ALS 6-months Mortality Prediction - Buonocore et al., 2022_ ([link](http://ceur-ws.org/Vol-3180/paper-90.pdf))
+
+* _XAI-Healthcare International Workshop Presentation_ ([link](https://www.youtube.com/watch?v=N22QYvTZFBk))
+
+If you use the AraucanaXAI software, please cite it as:
+
+```
+@software{Buonocore_Araucana_XAI_2022,
+  author = {Buonocore, Tommaso Mario and Giovanna, Nicora and Enea, Parimbelli},
+  doi = {10.5281/zenodo.1234},
+  month = {9},
+  title = {{Araucana XAI}},
+  url = {https://github.com/detsutut/AraucanaXAI},
+  version = {1.0.0},
+  year = {2022}
+}
+```
+
+<p align="right"><a href="#top">↰ Back To Top</a></p>
+
+<!-- CONTACTS AND USEFUL LINKS -->
+## Contacts and Useful Links
+
+*   **Repository maintainer**: Tommaso M. Buonocore  [![Gmail][gmail-shield]][gmail-url] [![LinkedIn][linkedin-shield]][linkedin-url]  
+
+*   **Project Link**: [https://github.com/detsutut/AraucanaXAI](https://github.com/detsutut/AraucanaXAI)
+
+*   **Package Link**: [https://pypi.org/project/araucanaxai/](https://pypi.org/project/araucanaxai/)
+
+<p align="right"><a href="#top">↰ Back To Top</a></p>
 
 <!-- LICENSE -->
 ## License
 
 Distributed under MIT License. See `LICENSE` for more information.
 
-<p align="right">(<a href="#top">back to top</a>)</p>
-
-
-
-<!-- CONTACT -->
-## Contact and References
-
-*   **Repository maintainer**: Tommaso M. Buonocore  [![Gmail][gmail-shield]][gmail-url] [![LinkedIn][linkedin-shield]][linkedin-url]  
-
-*   **Paper Link**: [https://arxiv.org/abs/2110.08272](https://arxiv.org/abs/2110.08272)
-
-*   **Project Link**: [https://github.com/detsutut/AraucanaXAI](https://github.com/detsutut/AraucanaXAI)
-
-*   **Package Link**: [https://pypi.org/project/araucanaxai/](https://pypi.org/project/araucanaxai/)
-
-<p align="right">(<a href="#top">back to top</a>)</p>
-
-
-
-<!-- ACKNOWLEDGMENTS -->
-## Acknowledgments
-
-Authors: E. Parimbelli, G. Nicora, S. Wilk, W. Michalowski, R. Bellazzi
-
-<p align="right">(<a href="#top">back to top</a>)</p>
-
-
+<p align="right"><a href="#top">↰ Back To Top</a></p>
 
 <!-- MARKDOWN LINKS -->
 [contributors-shield]: https://img.shields.io/github/contributors/detsutut/AraucanaXAI.svg?style=for-the-badge
