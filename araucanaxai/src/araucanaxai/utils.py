@@ -161,9 +161,11 @@ def __oversample(x_local, x_instance,
 
 
 def __create_tree(X, y, X_features, max_depth=constants.MAX_DEPTH,
-                  min_samples_leaf=constants.MIN_SAMPLES_LEAF, seed=constants.SEED):
+                  min_samples_leaf=constants.MIN_SAMPLES_LEAF):
     """
     Grow a classification tree without pruning.
+    Note: why a fixed seed? According to this issue (github.com/scikit-learn/scikit-learn/issues/2386), by default the sklearn implementation for decision tree classifiers is NOT deterministic, even if max_features=n_features and splitter=best, because the implementation will still sample them at random from the list of features even though this means all features will be sampled. Thus, the order in which the features are considered is pseudo-random and a deterministic behaviour between different runs can be achieved only if the random state is fixed a priori.
+
 
     :param X: training set
     :param y: class to be predicted
@@ -174,7 +176,7 @@ def __create_tree(X, y, X_features, max_depth=constants.MAX_DEPTH,
 
     :return: classification tree
     """
-    clf_tree_0 = tree.DecisionTreeClassifier(max_depth=max_depth, min_samples_leaf=min_samples_leaf, random_state=seed)
+    clf_tree_0 = tree.DecisionTreeClassifier(max_depth=max_depth, min_samples_leaf=min_samples_leaf, random_state=1)
     clf_tree_0.fit(DataFrame(X, columns=X_features), y)
     return clf_tree_0
 
