@@ -1,6 +1,7 @@
 from . import constants
 from warnings import warn
 from pandas import DataFrame
+from math import ceil
 import numpy as np
 from sklearn import tree
 from sklearn import datasets
@@ -68,7 +69,7 @@ def __find_nearest_class(target: np.ndarray, data: np.ndarray, data_class: np.nd
 
 
 def __find_neighbours(target: np.ndarray, data: np.ndarray, cat_list: list = None,
-                      n: int = constants.NEIGHBOURHOOD_SIZE):
+                      n=constants.NEIGHBOURHOOD_SIZE):
     """
     Finds the n nearest neighbours to the target example according to the Gower distance.
 
@@ -84,6 +85,9 @@ def __find_neighbours(target: np.ndarray, data: np.ndarray, cat_list: list = Non
     d_gow = gower_matrix(target, data, cat_features=cat_list)
     # Let's select the first k neighbours
     d2index = dict(zip(d_gow[0].tolist(), list(range(data.shape[0]))))
+    # Check on n: if less than 1, it has to be considered as % of training set
+    if n < 1:
+        n = int(ceil(data.shape[0] * n))
     my_index = [d2index[i] for i in np.sort(d_gow)[0][0:n].tolist()]
     # nk nearest neighbours in the training set according to gower distance
     local_training_set = data[my_index, :]
@@ -157,9 +161,11 @@ def __oversample(x_local, x_instance,
 
 
 def __create_tree(X, y, X_features, max_depth=constants.MAX_DEPTH,
-                  min_samples_leaf=constants.MIN_SAMPLES_LEAF, seed=constants.SEED):
+                  min_samples_leaf=constants.MIN_SAMPLES_LEAF):
     """
     Grow a classification tree without pruning.
+    Note: why a fixed seed? According to this issue (github.com/scikit-learn/scikit-learn/issues/2386), by default the sklearn implementation for decision tree classifiers is NOT deterministic, even if max_features=n_features and splitter=best, because the implementation will still sample them at random from the list of features even though this means all features will be sampled. Thus, the order in which the features are considered is pseudo-random and a deterministic behaviour between different runs can be achieved only if the random state is fixed a priori.
+
 
     :param X: training set
     :param y: class to be predicted
@@ -170,7 +176,7 @@ def __create_tree(X, y, X_features, max_depth=constants.MAX_DEPTH,
 
     :return: classification tree
     """
-    clf_tree_0 = tree.DecisionTreeClassifier(max_depth=max_depth, min_samples_leaf=min_samples_leaf, random_state=seed)
+    clf_tree_0 = tree.DecisionTreeClassifier(max_depth=max_depth, min_samples_leaf=min_samples_leaf, random_state=1)
     clf_tree_0.fit(DataFrame(X, columns=X_features), y)
     return clf_tree_0
 
@@ -258,7 +264,7 @@ def run(x_target, y_pred_target, x_train, feature_names, cat_list, predict_fun,
 
     # 3) CREATE TREE
     xai_c = __create_tree(X_res, y_res, feature_names,
-                          max_depth=max_depth, min_samples_leaf=min_samples_leaf, seed=seed)
+                          max_depth=max_depth, min_samples_leaf=min_samples_leaf)
     return {'tree': xai_c,
             'data': [X_res, y_res],
             'acc': xai_c.score(X_res, y_res)}

@@ -264,7 +264,7 @@ def run(x_target, y_pred_target, x_train, feature_names, cat_list, predict_fun,
 
     # 3) CREATE TREE
     xai_c = __create_tree(X_res, y_res, feature_names,
-                          max_depth=max_depth, min_samples_leaf=min_samples_leaf, seed=seed)
+                          max_depth=max_depth, min_samples_leaf=min_samples_leaf)
     return {'tree': xai_c,
             'data': [X_res, y_res],
             'acc': xai_c.score(X_res, y_res)}
