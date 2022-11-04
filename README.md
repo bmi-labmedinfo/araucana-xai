@@ -140,7 +140,7 @@ See the [open issues](https://github.com/detsutut/AraucanaXAI/issues) for a full
 
 * _XAI-Healthcare International Workshop Presentation_ ([link](https://www.youtube.com/watch?v=N22QYvTZFBk))
 
-If you use the AraucanaXAI software, please cite it as:
+If you use the AraucanaXAI software for your projects, please cite it as:
 
 ```
 @software{Buonocore_Araucana_XAI_2022,
