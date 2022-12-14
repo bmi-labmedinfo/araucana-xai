@@ -17,7 +17,7 @@
   [![Status][status-shield]][status-url]
 
   <p align="center">
-    Repository for the <a href="https://pypi.org/project/araucanaxai/">araucanaxai</a> package. Implementation of the pipeline first described in <a href="https://arxiv.org/abs/2110.08272">Parimbelli et al., 2021</a>.
+    Repository for the <a href="https://pypi.org/project/araucanaxai/">araucanaxai</a> package. Implementation of the pipeline first described in <a href="https://www.sciencedirect.com/science/article/pii/S0933365722002238">Parimbelli et al., 2023</a>.
     <br />
     <a href="https://github.com/detsutut/AraucanaXAI"><strong>Explore the docs »</strong></a>
     <br />
