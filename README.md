@@ -134,11 +134,13 @@ See the [open issues](https://github.com/detsutut/AraucanaXAI/issues) for a full
 <!-- PUBLICATIONS -->
 ## Publications
 
-* _Tree-based Local Explanations of Machine Learning Model Predictions - Parimbelli et al., 2021_ ([link](https://arxiv.org/abs/2110.08272))
+List of publications involving AraucanaXAI
 
-* _Evaluation of XAI on ALS 6-months Mortality Prediction - Buonocore et al., 2022_ ([link](http://ceur-ws.org/Vol-3180/paper-90.pdf))
+* E Parimbelli, TM Buonocore, G Nicora, W Michalowski, S Wilk, R Bellazzi - Why did AI get this one wrong? Tree-based explanations of machine learning model predictions - Artificial Intelligence in Medicine, Volume 135, 2023 ([link](https://www.sciencedirect.com/science/article/pii/S0933365722002238))
 
-* _XAI-Healthcare International Workshop Presentation_ ([link](https://www.youtube.com/watch?v=N22QYvTZFBk))
+* TM Buonocore, G Nicora, A Dagliati, E Parimbelli - Evaluation of XAI on ALS 6-months Mortality Prediction - Proceedings of the Working Notes of CLEF 2022, Volume 3180, 2022 ([link](http://ceur-ws.org/Vol-3180/paper-90.pdf))
+
+* E Parimbelli, G Nicora, S Wilk, W Michalowski, R Bellazzi - Tree-based Local Explanations of Machine Learning Model Predictions - XAI Healthcare workshop, AIME 2021 ([link](https://arxiv.org/abs/2110.08272), [presentation](https://www.youtube.com/watch?v=N22QYvTZFBk))
 
 If you use the AraucanaXAI software for your projects, please cite it as:
 
