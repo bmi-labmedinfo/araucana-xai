@@ -6,6 +6,7 @@
 [![Issues][issues-shield]][issues-url]
 [![MIT License][license-shield]][license-url]
 
+
 <br />
 <div align="center">
   <h2>
@@ -14,7 +15,7 @@
 
   <h3 align="center">Tree-based local explanations of machine learning model predictions</h3>
   
-  [![Status][status-shield]][status-url]
+  [![Status][status-shield]][status-url] [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.10715476.svg)](https://doi.org/10.5281/zenodo.10715476)
 
   <p align="center">
     Repository for the <a href="https://pypi.org/project/araucanaxai/">araucanaxai</a> package. Implementation of the pipeline first described in <a href="https://www.sciencedirect.com/science/article/pii/S0933365722002238">Parimbelli et al., 2023</a>.
@@ -147,7 +148,7 @@ If you use the AraucanaXAI software for your projects, please cite it as:
 ```
 @software{Buonocore_Araucana_XAI_2022,
   author = {Buonocore, Tommaso Mario and Giovanna, Nicora and Enea, Parimbelli},
-  doi = {10.5281/zenodo.1234},
+  doi = {10.5281/zenodo.10715476},
   month = {9},
   title = {{Araucana XAI}},
   url = {https://github.com/detsutut/AraucanaXAI},
