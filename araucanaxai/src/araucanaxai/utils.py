@@ -106,7 +106,7 @@ def __random_oversample(x_local, x_instance, cat_list: list = None, size: int = 
     :param uniform: specify if the new instances must be drawn from uniform distribution or not
     :param seed: specify random state
 
-    :return: oversampled local data
+    :return: local set of examples augmented with the oversampled local data
     """
     x = np.concatenate((x_local, x_instance))
     o = np.zeros((size, x.shape[1]))
@@ -125,7 +125,7 @@ def __random_oversample(x_local, x_instance, cat_list: list = None, size: int = 
             else:  # if not uniform, we can generate from normal distribution
                 mu, sigma = np.mean(column), np.std(column)  # mean and standard deviation
                 o[:, i] = np.random.normal(mu, sigma, size=size)
-    return o
+    return np.concatenate((x, o))
 
 
 def __oversample(x_local, x_instance,
